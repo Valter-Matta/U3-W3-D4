@@ -1,10 +1,12 @@
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row, Spinner } from "react-bootstrap";
 import SingleArticle from "./SingleArticle";
 import { useEffect, useState } from "react";
 import IArticles from "../types/Articles";
+import MySpinner from "./MySpinner";
 
 const Articles = () => {
 	const [articles, setArticles] = useState<IArticles[]>([]);
+	const [spinner, setSpinner] = useState(true);
 
 	const getArticles = async () => {
 		try {
@@ -15,6 +17,7 @@ const Articles = () => {
 				const arrOfArticles = await resp.json();
 				// console.log(arrOfArticles.results);
 				setArticles(arrOfArticles.results);
+				setSpinner(false);
 			}
 		} catch (error) {
 			console.log(error);
@@ -26,9 +29,13 @@ const Articles = () => {
 	}, []);
 	return (
 		<>
-			{articles.map(a => (
-				<SingleArticle key={a.id} article={a}></SingleArticle>
-			))}
+			{spinner ? (
+				<MySpinner></MySpinner>
+			) : (
+				articles.map(a => (
+					<SingleArticle key={a.id} article={a}></SingleArticle>
+				))
+			)}
 		</>
 	);
 };
